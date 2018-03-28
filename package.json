@@ -1,0 +1,38 @@
+{
+  "name": "editor",
+  "version": "0.0.1",
+  "description": "editor",
+  "keywords": [
+    "editor"
+  ],
+  "homepage": "",
+  "bugs": {
+    "url": "",
+    "email": "vuild@ncsoft.com"
+  },
+  "main": "editor.js",
+  "scripts": {},
+  "author": {
+    "name": "Hyun-Seok.Kim",
+    "email": "vuild@ncsoft.com",
+    "url": ""
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.1.2",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "eslint-loader": "^1.9.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.1",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.10.0"
+  }
+}
