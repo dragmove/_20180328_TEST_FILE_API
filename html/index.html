@@ -9,12 +9,64 @@
     <meta name="keywords" content="editor"/>
     <meta name="author" content=""/>
     <title>index</title>
+    <style>
+        body {
+            font-weight: normal;
+            font-style: normal;
+        }
+        a {text-decoration:none;}
+
+        .drag-container {
+            position:relative;
+            height:200px;
+        }
+        #drag-obj {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            background: #f00;
+            user-select: none;
+            -ms-user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+        #drop-zone {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #f00;
+        }
+    </style>
 </head>
 
 <body>
-<h1>hello world</h1>
-</div>
+<div id="container">
 
+    <h3>file upload - use one input</h3>
+    <form action="upload_files.php" method="post" enctype="multipart/form-data">
+        <input id="file-input" type="file" />
+    </form>
+
+    <h3>multiple file upload - use one input attributed multiple</h3>
+    <form action="upload_files.php" method="post" enctype="multipart/form-data">
+        <input name="userfile[]" type="file" multiple /><br />
+        <input type="submit" value="upload files" />
+    </form>
+
+
+    <h3>file upload by drag and drop - upload by ajax</h3>
+    <div class="drop-container">
+        <div id="drop-zone">
+            drag file into this drop zone.
+        </div>
+
+        <button id="btn-upload">upload files</button>
+    </div>
+
+    <div id="desc-file"></div>
+</div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="

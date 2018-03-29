@@ -23,6 +23,7 @@
     "url": ""
   },
   "devDependencies": {
+    "aid.js": "^0.1.63",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.1.2",

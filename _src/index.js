@@ -1,64 +1,92 @@
+import aid from 'aid.js';
+
 (function ($) {
   'use strict';
+
+  const browser = aid.browser;
 
   /*
    * implement
    */
   $(document).ready(init);
 
-  function init() {
+  function setOneFileInput() {
+    let fileInput = $('#file-input');
 
-    if (!isSupportDraggable()) {
-      window.alert('this browser does not support draggable attribute');
-    }
+    fileInput.on('change', function (evt) {
+      console.log('evt :', evt);
 
-    if (!isSupportDragAndDrop()) {
-      window.alert('this browser does not support methods related drag.');
-    }
+      let files = this.files;
+      console.log('files :', files);
 
-    if (!isSupportFileApi()) {
-      window.alert('this browser does not support File API.');
-    }
+      for (let i = 0, max = files.length; i < max; i++) {
+        let file = files[i];
+        console.log('file :', file);
 
-    var files = [];
-    var dragObj = $('#drag-obj').get(0);
+        /*
+         let reader = new FileReader();
+         reader.onload = function () {
+         let img = document.createElement('img');
+         img.onload = function () {
+         console.log('image natural width, height :', img.naturalWidth, img.naturalHeight);
+         };
 
-    dragObj.ondragstart = function () {
-    };
+         img.onerror = function () {
+         console.log('can not load image');
+         };
 
-    dragObj.ondrag = function () {
-    };
+         img.src = reader.result;
 
-    dragObj.ondragend = function () {
-      window.alert('dragend div.');
-    };
+         $('body').append(img);
+         };
+
+         reader.readAsDataURL(file);
+         */
+
+        let img = document.createElement('img'),
+          objectURL = window.URL.createObjectURL(file); // get blob url
+        console.log('objectURL :', objectURL);
+
+        img.src = objectURL;
+
+        $('body').append(img);
+      }
+    });
+  }
+
+  function setMultipleFileInput() {
+
+  }
+
+  function setDropAndDropFile() {
+    if (!browser.isSupportDraggable()) window.alert('this browser does not support draggable attribute');
+    if (!browser.isSupportDragAndDrop()) window.alert('this browser does not support methods related drag.');
+    if (!browser.isSupportFileApi()) window.alert('this browser does not support File API.');
+
+    let files = [];
 
     $('#drop-zone').on({
       'dragenter': function (event) {
-        // enter
         console.log('enter');
       },
       'dragleave': function (event) {
-        // leave
         console.log('leave');
       },
       'dragover': function (event) {
         event.preventDefault();
-
         console.log('over');
       },
       'drop': function (event) {
         event.preventDefault();
         console.log('drop');
 
-        window.alert('drop file in drop-zone.');
-
-        files = event.originalEvent.dataTransfer.files;
-
+        files = event.originalEvent.dataTransfer.files || [];
         if (files && files.length) {
-          var output = '';
-          for (var i = 0, max = files.length; i < max; i++) {
-            var file = files[i];
+          let output = '';
+          for (let i = 0, max = files.length; i < max; i++) {
+            let file = files[i];
+            console.log('file :', file);
+
             output += '<p>name : ' + file.name + '</p>';
             output += '<p>type : ' + file.type + '</p>';
             output += '<p>size : ' + file.size + '</p>';
@@ -79,52 +107,42 @@
 
       if (files.length <= 0) {
         window.alert('no file is selected.');
-
-      } else {
-        sendFiles(files);
+        return;
       }
+
+      var formData = new FormData();
+      for (var i = 0; i < files.length; ++i) {
+        formData.append('userfile', files[i]);
+      }
+
+      console.log('formData :', formData);
+      return;
+
+      $.ajax({
+        type: 'POST',
+        url: 'upload_dropzone_files.php',
+        data: formData,
+        dataType: 'json',
+        contentType: false,
+        cache: false,
+        processData: false,
+        beforeSend: function () {
+        },
+        success: function (data, textStatus, jqXHR) {
+          console.log('success data :', data);
+        },
+        error: function (jqXHR, textStatus, error) {
+          console.log('error :'.jqXHR);
+        }
+      });
+
+      files = [];
     });
   }
 
-  function isSupportDraggable() {
-    var div = document.createElement('div');
-    return ('draggable' in div);
-  }
-
-  function isSupportDragAndDrop() {
-    var div = document.createElement('div');
-    return ('ondragstart' in div && 'ondrop' in div);
-  }
-
-  function isSupportFileApi() {
-    return !!(window.File && window.FileReader && window.FileList && window.Blob);
-  }
-
-  function sendFiles(files) {
-    for (var i = 0; i < files.length; ++i) {
-      sendFile(files[i]);
-    }
-  }
-
-  function sendFile(file) {
-    var formData = new FormData();
-    formData.append('userfile', file);
-    $.ajax({
-      type: 'POST',
-      url: 'upload_dropzone_files.php',
-      data: formData,
-      dataType: 'json',
-      contentType: false,
-      cache: false,
-      processData: false,
-      beforeSend: function () {
-      },
-      success: function (data, textStatus, jqXHR) {
-        console.log('success data :', data);
-      },
-      error: function (jqXHR, textStatus, error) {
-        console.log('error :'.jqXHR);
-      }
-    });
+  function init() {
+    setOneFileInput();
+    setMultipleFileInput();
+    setDropAndDropFile();
   }
 }(jQuery));
